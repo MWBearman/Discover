@@ -45,61 +45,23 @@
             width: 50%; /* Makes the dropdown wider */
             margin: auto; /* Centers the dropdown */
         }
-.app-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
-    gap: 20px; /* Space between grid items */
-    padding: 20px; /* Padding around the grid area */
-}
-
-.app-cell {
-    display: block; /* Change from 'none' to 'block' as the default, will be toggled by JS */
-    width: 100%; /* Ensures each cell fills its column */
-    text-align: center; /* Centers the content */
-}
-
-.app-cell img {
-    width: 100px; /* Set a fixed width for images */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: 8px; /* Space between the image and the text */
-}
-
-    </style>
-<script>
-    function switchSection(sectionId) {
-        var sections = document.querySelectorAll('.content section');
-        sections.forEach(function(section) {
-            section.style.display = 'none';
-        });
-
-        var selectedSection = document.getElementById(sectionId);
-        if (selectedSection) {
-            selectedSection.style.display = 'block';
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
+            gap: 20px; /* Space between grid items */
+            padding: 20px; /* Padding around the grid area */
         }
-    }
-
-function handleCategoryChange() {
-    var select = document.getElementById('categoryDropdown');
-    var cells = document.querySelectorAll('.app-cell');
-    cells.forEach(function(cell) {
-        cell.style.display = 'none'; // Hide all first
-    });
-
-    var selectedCells = document.querySelectorAll('[data-category="' + select.value + '"]');
-    selectedCells.forEach(function(cell) {
-        cell.style.display = 'block'; // Show selected category
-    });
-}
-
-
-    // On initial page load
-    window.onload = function() {
-        switchSection('apps'); // Initially display the Apps section
-        document.getElementById('categoryDropdown').value = 'Entertainment'; // Set the default dropdown value
-        handleCategoryChange(); // Trigger change to load 'Entertainment'
-    };
-</script>
-
+        .app-cell {
+            display: none; /* Change from 'none' to 'block' as the default, will be toggled by JS */
+            width: 100%; /* Ensures each cell fills its column */
+            text-align: center; /* Centers the content */
+        }
+        .app-cell img {
+            width: 100px; /* Set a fixed width for images */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 8px; /* Space between the image and the text */
+        }
+    </style>
 </head>
 <body>
     <header></header>
@@ -112,9 +74,10 @@ function handleCategoryChange() {
         <section id="games" style="display: none;">
             <!-- Games content goes here -->
         </section>
-        <section id="apps" style="display: none;">
+        <section id="apps">
             <div class="category-selector">
                 <select id="categoryDropdown" onchange="handleCategoryChange()">
+                    <option value="all">All Categories</option>
                     <option value="Entertainment">Entertainment</option>
                     <option value="Finance">Finance</option>
                     <option value="Food & Drink">Food & Drink</option>
@@ -540,11 +503,45 @@ function handleCategoryChange() {
         <div class="app-cell" data-category="Utility" style="display:none;">
             <a href="https://apps.apple.com/us/app/norton-360-security-vpn/id1278474169" target="_blank">
                 <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/d4/38/71/d4387185-c582-2b3a-546b-44de59ee7c07/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/492x0w.webp" alt="Norton 360 Security & VPN" style="width:50px; height:50px;"><br>Norton 360 Security & VPN
-            </a>            </div>
-        </section>
-        <section id="more" style="display: none;">
-            <!-- More content goes here -->
-        </section>
-    </div>
+            </a>            
+        </div>
+
+    <script>
+        function switchSection(sectionId) {
+            var sections = document.querySelectorAll('.content section');
+            sections.forEach(function(section) {
+                section.style.display = 'none';
+            });
+
+            var selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+        }
+
+        function handleCategoryChange() {
+            var select = document.getElementById('categoryDropdown');
+            var cells = document.querySelectorAll('.app-cell');
+            if (select.value === 'all') {
+                cells.forEach(function(cell) {
+                    cell.style.display = 'block'; // Show all cells
+                });
+            } else {
+                cells.forEach(function(cell) {
+                    cell.style.display = 'none'; // Hide all first
+                    if (cell.getAttribute('data-category') === select.value) {
+                        cell.style.display = 'block'; // Show selected category
+                    }
+                });
+            }
+        }
+
+        // On initial page load
+        window.onload = function() {
+            switchSection('apps'); // Initially display the Apps section
+            document.getElementById('categoryDropdown').value = 'Entertainment'; // Set the default dropdown value
+            handleCategoryChange(); // Trigger change to load 'Entertainment'
+        };
+    </script>
 </body>
 </html>
