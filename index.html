@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fetch Discover</title>
+    <title>Your Website Title</title>
     <style>
         body, html {
             margin: 0;
@@ -47,6 +47,61 @@
             margin: 0 auto; /* Centers the grid in the section if necessary */
         }
 
+        #more {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.offer-tile {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.offer-image {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.offer-details {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+.offer-title {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.offer-description {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.offer-points {
+    font-weight: bold;
+    color: #444;
+}
+
+.offer-link {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
 .app-cell {
     display: none; /* Keep this as none, will be toggled by JS */
     width: 100%; /* Ensures each cell fills its column */
@@ -80,6 +135,54 @@
         <section id="games" style="display: none;">
             <iframe src="https://fetch.playtimeweb.com/play?user_id=65dce483fe555d15f28a73aa&idfa=E7998AE3-847A-46DE-8B97-045G9739056F" frameborder="0"></iframe>
         </section>
+<section id="more" style="display: none;">
+    <div class="offer-tile">
+        <img src="https://main-p.agmcdn.com/utUqXR5qzTfhEvwCF7hF6UnH7CbJAng9ZPAxSEj5.jpg" alt="Offer Image" class="offer-image">
+        <div class="offer-details">
+            <h2 class="offer-title">FreeCryptoRewards</h2>
+            <p class="offer-description">Earn points by completing surveys and offers.</p>
+            <span class="offer-points">Points: 500</span>
+            <a href="offer_link" class="offer-link">Learn more</a>
+        </div>
+    </div>
+    <div class="offer-tile">
+        <img src="https://main-p.agmcdn.com/offers/410461-yzcMNw0J.jpg" alt="Offer Image" class="offer-image">
+        <div class="offer-details">
+            <h2 class="offer-title">Pulsz</h2>
+            <p class="offer-description">Play and enjoy world-class online social casino games. Pulsz games are trusted by over 500,000 social casino-loving Americans.</p>
+            <span class="offer-points">Points: 500</span>
+            <a href="offer_link" class="offer-link">Learn more</a>
+        </div>
+    </div>
+        <div class="offer-tile">
+        <img src="https://main-p.agmcdn.com/offers/1618593940172.png" alt="Offer Image" class="offer-image">
+        <div class="offer-details">
+            <h2 class="offer-title">Inbox Dollars</h2>
+            <p class="offer-description">Earn Cash for Your Everyday Online Activities with InboxDollars</p>
+            <span class="offer-points">Points: 500</span>
+            <a href="offer_link" class="offer-link">Learn more</a>
+        </div>
+           </div>
+        <div class="offer-tile">
+        <img src="https://main-p.agmcdn.com/offers/670959-xHA09vqG.jpg" alt="Offer Image" class="offer-image">
+        <div class="offer-details">
+            <h2 class="offer-title">Starbucks</h2>
+            <p class="offer-description">Enter for a chance to get an $750 Starbucks Reward Card.</p>
+            <span class="offer-points">Points: 500</span>
+            <a href="offer_link" class="offer-link">Learn more</a>
+        </div>
+           </div>
+        <div class="offer-tile">
+        <img src="https://main-p.agmcdn.com/offers/1576527573134.png" alt="Offer Image" class="offer-image">
+        <div class="offer-details">
+            <h2 class="offer-title">USA Today</h2>
+            <p class="offer-description">Save up to 99% on a digital subscription to your local USA TODAY Network publication to keep you informed on news, sports and events for just $1 for 6 months!</p>
+            <span class="offer-points">Points: 500</span>
+            <a href="offer_link" class="offer-link">Learn more</a>
+        </div>
+    </div>
+</section>
+
         <section id="apps">
             <div class="category-selector">
                 <select id="categoryDropdown" onchange="handleCategoryChange()">
