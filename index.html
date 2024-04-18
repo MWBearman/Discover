@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Website Title</title>
+    <title>Fetch Discover</title>
     <style>
         body, html {
             margin: 0;
@@ -23,6 +23,7 @@
             display: flex;
             width: 100%;
         }
+
         .button {
             flex-grow: 1; /* Makes each button fill the container evenly */
             background: #4CAF50;
@@ -38,6 +39,21 @@
             text-align: center;
             margin: 20px 0; /* More space around the dropdown */
         }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
+            gap: 20px; /* Space between grid items */
+            padding: 20px; /* Padding around the grid area */
+            margin: 0 auto; /* Centers the grid in the section if necessary */
+        }
+
+.app-cell {
+    display: none; /* Keep this as none, will be toggled by JS */
+    width: 100%; /* Ensures each cell fills its column */
+    text-align: center; /* Centers the content */
+    transition: all 0.3s ease; /* Smooth transition for display changes */
+}
+
         #categoryDropdown {
             padding: 10px 15px; /* Larger padding for easier touch */
             font-size: 18px; /* Larger text */
@@ -45,21 +61,11 @@
             width: 50%; /* Makes the dropdown wider */
             margin: auto; /* Centers the dropdown */
         }
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
-            gap: 20px; /* Space between grid items */
-            padding: 20px; /* Padding around the grid area */
-        }
-        .app-cell {
-            display: none; /* Change from 'none' to 'block' as the default, will be toggled by JS */
-            width: 100%; /* Ensures each cell fills its column */
-            text-align: center; /* Centers the content */
-        }
-        .app-cell img {
-            width: 100px; /* Set a fixed width for images */
-            height: auto; /* Maintain aspect ratio */
-            margin-bottom: 8px; /* Space between the image and the text */
+
+        iframe {
+            width: 100%; /* Full width */
+            height: calc(100vh - 150px); /* Full height minus the header */
+            border: none; /* No border */
         }
     </style>
 </head>
@@ -72,7 +78,7 @@
     </div>
     <div class="content">
         <section id="games" style="display: none;">
-            <!-- Games content goes here -->
+            <iframe src="https://fetch.playtimeweb.com/play?user_id=65dce483fe555d15f28a73aa&idfa=E7998AE3-847A-46DE-8B97-045G9739056F" frameborder="0"></iframe>
         </section>
         <section id="apps">
             <div class="category-selector">
@@ -93,7 +99,6 @@
                 </select>
             </div>
             <div class="app-grid">
-                <!-- App cells go here -->
                 <div class="app-cell" data-category="Entertainment" style="display:none;">
             <a href="https://play.google.com/store/apps/details?id=com.zhiliaoapp.musically" target="_blank">
                 <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/75/8d/7d/758d7d37-9de9-00a0-172f-26c4f2c56991/AppIcon_TikTok-0-0-1x_U007epad-0-0-0-85-220.png/492x0w.webp" alt="TikTok" style="width:50px; height:50px;"><br>TikTok
@@ -519,22 +524,18 @@
             }
         }
 
-        function handleCategoryChange() {
-            var select = document.getElementById('categoryDropdown');
-            var cells = document.querySelectorAll('.app-cell');
-            if (select.value === 'all') {
-                cells.forEach(function(cell) {
-                    cell.style.display = 'block'; // Show all cells
-                });
-            } else {
-                cells.forEach(function(cell) {
-                    cell.style.display = 'none'; // Hide all first
-                    if (cell.getAttribute('data-category') === select.value) {
-                        cell.style.display = 'block'; // Show selected category
-                    }
-                });
-            }
-        }
+function handleCategoryChange() {
+    var select = document.getElementById('categoryDropdown');
+    var allCells = document.querySelectorAll('.app-cell');
+    allCells.forEach(cell => cell.style.display = 'none'); // Hide all first
+
+    if (select.value === 'all') {
+        allCells.forEach(cell => cell.style.display = 'block'); // Show all cells if 'All Categories' is selected
+    } else {
+        var selectedCells = document.querySelectorAll(`.app-cell[data-category="${select.value}"]`);
+        selectedCells.forEach(cell => cell.style.display = 'block'); // Show only cells of the selected category
+    }
+}
 
         // On initial page load
         window.onload = function() {
