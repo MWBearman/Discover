@@ -1,643 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch Discover</title>
     <link rel="icon" href="https://fetch.com/favicon.png" type="image/png">
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: Arial, sans-serif;
-        }
-        .button-container {
-            display: flex;
-            width: 100%;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-family: Arial, sans-serif;
+      }
 
-        .button {
-            flex-grow: 1; /* Makes each button fill the container evenly */
-            background: #4CAF50;
-            color: white;
-            padding: 15px 20px; /* Larger padding */
-            text-align: center;
-            border: none;
-            border-radius: 0; /* Optional: removes rounded corners for a more modern look */
-            font-size: 16px; /* Larger font size */
-            cursor: pointer;
-        }
-        header {
-            background-image: url('https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/header.png');
-            background-size: cover;
-            background-position: center;
-            height: 88px;
-            width: 100%;
-        }
-        .category-selector {
-            text-align: center;
-            margin: 20px 0; /* More space around the dropdown */
-        }
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
-            gap: 20px; /* Space between grid items */
-            padding: 20px; /* Padding around the grid area */
-            margin: 0 auto; /* Centers the grid in the section if necessary */
-        }
+      *,
+      *:before,
+      *:after {
+        box-sizing: border-box;
+      }
 
-        #more {
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-}
+      .main-image {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
 
-.offer-tile {
-    display: flex;
-    align-items: center;
-    background-color: #f4f4f4;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    overflow: hidden;
-}
+      .button-container {
+        display: flex;
+        flex-direction: row;
+        /* Ensures horizontal layout */
+        justify-content: center;
+        /* Centers the buttons within the container */
+        align-items: center;
+        /* Aligns the buttons vertically at their center */
+        width: 100%;
+        /* Takes full width of its parent */
+      }
 
-.offer-image {
-    width: 150px;
-    height: 100px;
-    object-fit: cover;
-    margin-right: 20px;
-}
+      .button {
+        flex-grow: 1;
+        background: #4CAF50;
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        border: none;
+        border-radius: 0;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-.offer-details {
-    flex-grow: 1;
-    padding: 10px;
-}
+      header {
+        background-image: url('https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/header.png');
+        background-size: cover;
+        background-position: center;
+        height: 88px;
+        width: 100%;
+      }
 
-.offer-title {
-    margin: 0;
-    color: #333;
-    font-size: 18px;
-}
+      .modal {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
 
-.offer-description {
-    font-size: 16px;
-    color: #666;
-    margin: 5px 0;
-}
+      .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 600px;
+        text-align: center;
+      }
 
-.offer-points {
-    font-weight: bold;
-    color: #444;
-}
+      .modal-close {
+        float: right;
+        cursor: pointer;
+        font-size: 24px;
+        color: #000;
+      }
 
-.offer-link {
-    display: inline-block;
-    padding: 10px 15px;
-    background-color: #007BFF;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 10px;
-}
+      .coin-icon {
+        width: 20px !important;
+        height: 20px !important;
+        display: inline-block;
+        vertical-align: middle;
+        /* Vertically aligns the icon with the surrounding text */
+      }
 
+      .offer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
 
-.app-cell {
-    display: none; /* Keep this as none, will be toggled by JS */
-    width: 100%; /* Ensures each cell fills its column */
-    text-align: center; /* Centers the content */
-    transition: all 0.3s ease; /* Smooth transition for display changes */
-}
+      .button-container {
+        /* Make sure this container exists around your buttons if needed */
+        display: flex;
+        flex-direction: row;
+        /* Aligns buttons horizontally */
+        justify-content: center;
+        /* Centers buttons horizontally */
+        width: 100%;
+      }
 
-        #categoryDropdown {
-            padding: 10px 15px; /* Larger padding for easier touch */
-            font-size: 18px; /* Larger text */
-            cursor: pointer;
-            width: 50%; /* Makes the dropdown wider */
-            margin: auto; /* Centers the dropdown */
-        }
+      .points-button,
+      .learn-more-button {
+        margin: 5px;
+        /* Adds space around buttons */
+        width: auto;
+        /* Adjust width as needed, or set specific widths */
+        padding: 10px 20px;
+      }
 
-        iframe {
-            width: 100%; /* Full width */
-            height: calc(100vh - 150px); /* Full height minus the header */
-            border: none; /* No border */
-        }
+      .offer img {
+        width: 100%;
+        /* Adjust this as needed to fit your design */
+        height: auto;
+      }
+
+      .points-button,
+      .learn-more-button {
+        background: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .points-button,
+      .learn-more-button {
+        margin: 5px;
+        /* Adds space around buttons */
+        width: auto;
+        /* Adjust width as needed, or set specific widths */
+        padding: 10px 20px;
+      }
+
+      /* Optionally, ensure buttons have the same width for aesthetics */
+      .points-button,
+      .learn-more-button {
+        width: 150px;
+        /* Example fixed width, adjust based on your design needs */
+      }
+
+      .learn-more-button {
+        background: #390754;
+      }
+
+      iframe {
+        width: 100%;
+        height: calc(100vh - 150px);
+        border: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header></header>
     <div class="button-container">
-        <button class="button" onclick="switchSection('games')">Games</button>
-        <button class="button" onclick="switchSection('apps')">Apps</button>
-        <button class="button" onclick="switchSection('more')">More</button>
+      <button class="button" onclick="switchSection('games')">Games</button>
+      <button class="button" onclick="switchSection('apps')">Apps</button>
     </div>
     <div class="content">
-        <section id="games" style="display: none;">
-            <iframe src="https://fetch.playtimeweb.com/play?user_id=65dce483fe555d15f28a73aa&idfa=E7998AE3-847A-46DE-8B97-045G9739045T" frameborder="0"></iframe>
-        </section>
-<section id="more" style="display: none;">
-    <div class="offer-tile">
-        <img src="https://yt3.googleusercontent.com/DglK8d_vYuYhPRN5bhpNA8FkMAbsBrRuvgEa0tAtEA21VZWHyOPBIQDW7yW26lwB6zfauQHw=s900-c-k-c0x00ffffff-no-rj" alt="Offer Image" class="offer-image">
-        <div class="offer-details">
-            <h2 class="offer-title">Amazon Prime</h2>
-            <p class="offer-description">Start a free trial today!</p>
-            <span class="offer-points">Points: 1,500</span>
-            <a href="offer_link" class="offer-link">Learn more</a>
-        </div>
-    </div>
-    <div class="offer-tile">
-        <img src="https://hf-website-live.s3-eu-west-1.amazonaws.com/be/cms/homepage/image_columns/hiw-3-v2.png" alt="Offer Image" class="offer-image">
-        <div class="offer-details">
-            <h2 class="offer-title">Hello Fresh</h2>
-            <p class="offer-description">Order your first meal kit today and get rewarded</p>
-            <span class="offer-points">Points: 9,50</span>
-            <a href="offer_link" class="offer-link">Learn more</a>
-        </div>
-    </div>
-        <div class="offer-tile">
-        <img src="https://play-lh.googleusercontent.com/Jicw-UbWSYGvxu_vgxmzWlk9aYpGqbxrq6KrLnr0AFdeMKcilqO9RbrO0OfadSwC3sY" alt="Offer Image" class="offer-image">
-        <div class="offer-details">
-            <h2 class="offer-title">Acorns</h2>
-            <p class="offer-description">Start a free trial and complete a free "financial health check" to get points</p>
-            <span class="offer-points">Points: 750</span>
-            <a href="offer_link" class="offer-link">Learn more</a>
-        </div>
-           </div>
-        <div class="offer-tile">
-        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBhUIBwgWFRIVFyIaFxgYFiQgHxwXHB0WHyAnJiYYHjQmICMlIRkeITEmLSkrMDEuHyszOTM4Qyg5MDcBCgoKDg0OGhAQGjUmICUrLS8xNy0tKy43Ly03ListKzUuLi03LS0tNzcvLS02LS01MC03LS01Ky0tLjctLystN//AABEIAOEA4QMBIgACEQEDEQH/xAAcAAEAAgMBAQEAAAAAAAAAAAAAAwYEBQcBAgj/xAA2EAACAQMDAgQEBAMJAAAAAAAAAQIDBBEFEiEGMRMiQVEHMmFxFBUjkVKhsSRCQ2KBgpLB8P/EABkBAQEBAQEBAAAAAAAAAAAAAAABAgMEBf/EACQRAQACAQMEAgMBAAAAAAAAAAABEQIDEiETMUFRBKFxkeEi/9oADAMBAAIRAxEAPwDkYAPoPOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfUYuX0XuB8gmjKhD+45fd4X8iWN5GPazpv7xb/AOypbEBsYXWm1eLrT3H/ADUptP8A4zyiSrozrUHdaRXVaEeZRSxUgvrH1X1WQm721QC5WUCNAAAAAAAAAAAAAAAAAAAAGbcaXdW+mU9RqpeHVbUeecrd6enyskzEMzlEVc92EASUKUq9eNCn80pKK+7aS/qVqZpGDK1Gxr6beStLtJTjjOHlcpP+jMUkTfMJjlGUXHYJaVtcVqfiUbaco+8YNr90iOLxJPCePRrKLNV+IHVUrl16Oszpp9oQ4hFeyjLKS+gm/DUUrCabxk9bydA1TqWrGdK3690ejdxrUKdaFWEVTrxp1VlYlBJNrDzHCTa7mPDomwuNRtr3TdQdbTK9ZU5VPlqUpvtTqJLyOTxHfjHmzjtnO72telGB074g0em9PsJ2dPTLSm4QSoTozTrVKuY+dqEnto7dy/UblJ4xhnMY+b5efsXHK4tJigltbivZ3CubWq4TjypLuv8A3sRzThJxmsNPDT4aa79zxNPszSLBfW9HXNNnrFjRUa1LDuaUVxh/4sV6Jv5l6Pn6uvmz6b1d6JrML7w98F5asH2nSlxOLzxyvfjKT9CHW7Cpper1bGrbypuE2lCbTlGL5im4tpva1ymS+UiKhhAHuH6IqvAPXGOT3D/hf7AeAeuMch8dwAAAAAAAAAAAF7p31tY9G2f4vToV1ObilPsvNU55T5KITyu7mdCNvKvJwg8xjniL+i9O5z1MN9PP8jQ622J8Tf1MePyvr0LTlr93aUbKD/s6lTi0ntm968ue3KRro6StO0Gznd2ahcO8gm2lucd82llemEirPUb6V3+Ld5U8TGN+97se2c5wLjUb25qRqXF5OTg8xcpN7X7rPZnONLP28sfE1oqJz44vv4ivter3T6WoavqUHbRnVVOHhZSbUnTl2z2ecGj17S46d0lbOvaKFd1GpvC3NfqNZa78bf5GhWo3yu3dxvJqo+HPc9zXHrn6I+Lu8ur2SleXM5tdt0m8fuXHSyiY54/lLpfE1MMsf9cRXvxjX68oCydKU7eVCdWhokLy6i8xo1Jyx4aS80acMeM853RzwsNRfLVbPqEpQmpwk008pp4aa7NNdmjtMXD6US631/1Xb6VqNrZ3vTdlVpzs6U2qlLEoZdRbYtZcYxxwsNrkwulVp8q+rXljQnDRJW0l+pnDqYht2uXLkpeJjnKTinzg0lX4n9Q1Y041IW8/DpxhmpRU3Jxz5m5PO6Xrzj6Gl6h6s1zqOCp6vfuVNfLTilGC/wBsUk/u8s5RhNU1uh2LTdD0nT9Wq0LHS6caj8PbUVHxMLwKXG1UpKmm1KW5uO5t8vBrtS6a06pVua3VU4fqxoU6NSNGNKdvKrKsk5Km8btyhlt/L34yjkMdY1SN3+LhqdZVdqjvVWSltSwllPOFjsQVry6uN3j3U5eI1Ke6be6Syk5ZfmaTaTfbI6c+zdD9A/ktO31C41Ktp0KtxUjRjOMbaNZwufDTqPMpJ7XFR7uKy0+8jT6d03T1XR56xd6NGrVdebnbwgqfiVqU5UaUJbW1ThHa6k/M05S7tRw+QWOvaxptCpSsNUq041PnUZtbsLH3zjjK9OC39davPTOn9O6f0W9lGirONWq6c2lUlVbzna+eYybT/iJsmJ7ruhq9XfSdLqS6hqNvVlTTiofg3GNNTjBKthVE/K6ie3Hp/obj4mVOl3r1d1La7/FypU2pKcPDUnRp7MrG7tt3fXODneFjGCa7uri9uHcXleU5vGZSeW8JJcv2SS+yOm3lm0J3f4XUr7Tvh7Su6N1NRqVJvZC2dWWd8458rzjEO+PY4Qbiz6p6gsLWNrZa1Xp04rEYxqNJL6JDPGcoqDGad1s9TvXqdes5XClmMN/5dJtxUIyS4eVhzlw/fPqbW4r6va1Kta61mEaFKgq0m7bzJfqZyt/tDtjOT88w6x6mg24dQXCy8v8AVfL/AH+hBW6k12vGpGvrFeSqx21M1G98EmsPL5XmfH1fucujLW+Hb9F6kt+rNep2+k634k6MZ1XN2e1QWFDvOS5l4nZexW9X6h1fqL4UXeq6lcU9njeFCEaONy30knlyeHmT7exyvTdU1DSqjq6ZezpSktsnCTTcfZ49DxanfrTPytXs/wAPnd4W57N2c5x2znk30qlNy4Xel9NW/RSuIXMm6k5OnVdLzyqRi/J8uVDMSiDCzkHP42hOjGV5zlczPLWrqRnVRVQAA9LkAAAAAAAAAAAAAAAAAAAAAASS7IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/2Q==" alt="Offer Image" class="offer-image">
-        <div class="offer-details">
-            <h2 class="offer-title">Disney Bundle</h2>
-            <p class="offer-description">Start a free trial of the Disney Bundle and get access to hulu and ESPN+ for free</p>
-            <span class="offer-points">Points: 625</span>
-            <a href="offer_link" class="offer-link">Learn more</a>
-        </div>
-    </div>
-</section>
-
-        <section id="apps">
-            <div class="category-selector">
-                <select id="categoryDropdown" onchange="handleCategoryChange()">
-                    <option value="all">All Categories</option>
-                    <option value="Entertainment">Entertainment</option>
-                    <option value="Finance">Finance</option>
-                    <option value="Food & Drink">Food & Drink</option>
-                    <option value="Health & Fitness">Health & Fitness</option>
-                    <option value="Lifestyle">Lifestyle</option>
-                    <option value="Medical">Medical</option>
-                    <option value="Photo & Video">Photo & Video</option>
-                    <option value="Shopping">Shopping</option>
-                    <option value="Social Networking">Social Networking</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Utility">Utility</option>
-                </select>
+      <section id="games" style="display: none;">
+        <iframe src="https://fetch.playtimeweb.com/play?user_id=65dce483fe555d15f28a73aa&idfa=E7998AE3-847A-46DE-8B97-045G9739045T" frameborder="0"></iframe>
+      </section>
+      <div class="content">
+        <section id="apps" style="display: none;">
+          <div class="offer">
+            <img src="https://github.com/MWBearman/Discover/blob/main/Disney+.png?raw=true" alt="Disney+ Image" class="main-image" onclick="showModal('myModal')">
+            <h2>Disney+</h2>
+            <button class="points-button">1,500 <img src="https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/RewardIcon.png" alt="Coin" class="coin-icon">
+            </button>
+            <button class="learn-more-button" onclick="showModal('myModal')">Learn More</button>
+          </div>
+          <div class="modal" id="myModal">
+            <div class="modal-content">
+              <span class="modal-close" onclick="closeModal('myModal')">&times;</span>
+              <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/ce/c6/f4/cec6f4d4-c120-672f-4307-c818755ba032/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/230x0w.webp" alt="App Icon" style="width: 100px; height: 100px; margin-bottom: 20px;">
+              <h3>Disney+</h3>
+              <p>Disney+ is the streaming home of your favorite stories. With thousands of hours of entertainment from Disney, Pixar, Marvel, Star Wars, and National Geographic...</p>
+              <p> 1,500 Fetch Points <img src="https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/RewardIcon.png" alt="Coin" class="coin-icon">
+              </p>
+              <h4>Offer Conditions</h4>
+              <p>Sign up for a free trial of Disney+ to earn Fetch Points</p>
+              <a href="https://apps.apple.com/us/app/disney/id1446075923" target="_blank">
+                <button style="background-color: #390754; color: white; padding: 10px 20px; border-radius: 5px;">Install Now</button>
+              </a>
             </div>
-            <div class="app-grid">
-                <div class="app-cell" data-category="Entertainment" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.zhiliaoapp.musically" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/75/8d/7d/758d7d37-9de9-00a0-172f-26c4f2c56991/AppIcon_TikTok-0-0-1x_U007epad-0-0-0-85-220.png/492x0w.webp" alt="TikTok" style="width:50px; height:50px;"><br>TikTok
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Entertainment" style="display:none;">
-            <a href="https://apps.apple.com/ca/app/iheart-radio-music-podcasts/id290638154" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/ab/bf/dd/abbfddee-fc4c-264b-5877-87c0fcd22c47/AppIcon-0-1x_U007emarketing-0-6-0-sRGB-0-85-220-0.png/492x0w.webp" alt="iHeart: Music, Radio, Podcasts" style="width:50px; height:50px;"><br>iHeart: Music, Radio, Podcasts
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Entertainment" style="display:none;">
-            <a href="https://apps.apple.com/us/app/jackpocket-lottery-app/id663046683?mt=8" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/08/de/34/08de3456-83e3-b502-52cc-1f28b75a792d/Lottery_Icon-0-0-1x_U007epad-0-10-0-85-220.png/492x0w.webp" alt="Jackpocket Lottery App" style="width:50px; height:50px;"><br>Jackpocket Lottery App
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Entertainment" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.williamhill.us.nj.sports&hl=en_US&gl=US" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/hJtNUS76TIjP0m-YuLSoPg1ALGN8tQj-u0DGsVjgMbVUdbB3w90YxLvE7LVX5bYKurgf=w480-h960-rw" alt="Caesars Sportsbook" style="width:50px; height:50px;"><br>Caesars Sportsbook
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Entertainment" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=tv.pluto.android&hl=en_US&gl=US" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/JD6jTbbH6qKs2QhSOIdEPcKGbOhHrK1LDHas_WzbnmP8cOLzStJyn0usiIE3drV6Iik=w480-h960-rw" alt="Pluto TV: Watch & Stream Live" style="width:50px; height:50px;"><br>Pluto TV: Watch & Stream Live
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Entertainment" style="display:none;">
-            <a href="https://apps.apple.com/us/app/netflix/id363590051" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c4/15/54/c4155479-88dc-f630-e3e9-cdcb637ddf05/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-0-85-220.png/492x0w.webp" alt="Netflix Games" style="width:50px; height:50px;"><br>Netflix Games
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/app/id836215269" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/94/25/06/942506cf-bfc4-581c-0517-1dae04d405a1/AppIcon-0-0-1x_U007emarketing-0-5-0-85-220.png/492x0w.webp" alt="Chime – Mobile Banking" style="width:50px; height:50px;"><br>Chime – Mobile Banking
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/capital-one-shopping-save-now/id1089294040" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/bc/5e/6c/bc5e6c78-d1a2-4f8c-622f-b7cc794939d5/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/492x0w.webp" alt="Capital One Mobile" style="width:50px; height:50px;"><br>Capital One Mobile
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/super-com-travel-save-earn/id1450304211" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/a2/ac/ca/a2accaf8-d952-dace-44fa-56d0bb0c77c3/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/492x0w.webp" alt="Super.com" style="width:50px; height:50px;"><br>Super.com
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.klovercredit.android_app" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/1uQZoOy0NjsWBsop6dmE0xnTNPCcVO7n92pu2cB9aLoJOum1oUVLjtrP2YRJ4euD6S4=w480-h960-rw" alt="Klover - Instant Cash Advance" style="width:50px; height:50px;"><br>Klover - Instant Cash Advance
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.sofi.mobile&hl=en_US&gl=US" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/2cUGJUpk3zdo8AsWUXYpDXjm8uRVCbkn7WPD-DE-LO-K0ZDvgbYcNXZ-fjgw9yfzNxK3=w480-h960-rw" alt="SoFi - Banking and Investing" style="width:50px; height:50px;"><br>SoFi - Banking and Investing
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/copper-bank-earn-money/id1486647561" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/0b/1d/3a/0b1d3aa1-bbf9-e50c-80e7-b906e376d0b4/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/460x0w.webp" alt="Copper - Bank & Earn Money" style="width:50px; height:50px;"><br>Copper - Bank & Earn Money
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/stash-investing-made-easy/id1017148055" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/bb/da/6e/bbda6e81-7798-46a1-2edb-fd5e0f3144ef/AppIcon-0-0-1x_U007emarketing-0-5-0-85-220.png/460x0w.webp" alt="Stash: Investing made easy" style="width:50px; height:50px;"><br>Stash: Investing made easy
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/magnifi-invest-with-ai/id1574358920" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/b4/c0/f5/b4c0f5c2-2eca-7177-e725-5b28aad0c0ff/AppIcon-prod-0-0-1x_U007emarketing-0-6-0-0-85-220.png/492x0w.webp" alt="Magnifi: Invest with AI" style="width:50px; height:50px;"><br>Magnifi: Invest with AI
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/dave-banking-cash-advance/id1193801909" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c4/fd/f2/c4fdf23c-955d-9ea1-50dc-b79288969382/AppIcon-3d-1x_U007epad-0-85-220-0.png/492x0w.webp" alt="Dave - Banking & Cash Advance" style="width:50px; height:50px;"><br>Dave - Banking & Cash Advance
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/socialgood-crypto-rewards/id1494986337?mt=8" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/09/7a/a1/097aa12b-3c1c-1603-b9cb-d75c9d40eac6/AppIcon-0-0-1x_U007ephone-0-0-0-85-220.png/492x0w.webp" alt="SocialGood:Crypto Rewards" style="width:50px; height:50px;"><br>SocialGood:Crypto Rewards
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.meetcleo.cleo" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/KlijMMWfywprwJWB9ypI4TFHRc_FF1TXZtR-U5hKdtTaaUkggLF9dzsgQfvNS83D3SY=w480-h960-rw" alt="Cleo" style="width:50px; height:50px;"><br>Cleo
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/US/app/id867619606?mt=8" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/90/4c/79/904c792e-63cc-1371-5233-d1f88029f1bd/AppIcon-1x_U007emarketing-0-7-0-sRGB-85-220-0.png/492x0w.webp" alt="MoneyGram" style="width:50px; height:50px;"><br>MoneyGram
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/credit-sesame/id476718980" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/a1/4c/57/a14c577b-9042-1e47-ff4b-7afaec26c033/AppIcon-AppStore-0-1x_U007emarketing-0-9-0-85-220-0.png/460x0w.webp" alt="Credit Sesame" style="width:50px; height:50px;"><br>Credit Sesame
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/stellarfi-build-credit-score/id6450202551" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/cd/75/e5/cd75e576-9d44-e52f-ed50-076c7cceab4e/AppIcon-prod-0-0-1x_U007emarketing-0-10-0-85-220.png/460x0w.webp" alt="StellarFi" style="width:50px; height:50px;"><br>StellarFi
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.discoverfinancial.mobile" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/EbIw2XpbAvJtjWytHK5SMtUXvu0ASUyAc7jbsi1GfqlX8qbXaZF8F_NqWHdcG0Pgpys=w480-h960-rw" alt="Discover Checking" style="width:50px; height:50px;"><br>Discover Checking
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.creditonebank.mobile&hl=en_US&gl=US" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/R_iL1oKdPYOoD3ioW6t6VgOB04_ebMHmSMFyTYH3bE6S6wuRo6Pku58Xu05NGK_JGQ=w480-h960-rw" alt="Credit One Bank Mobile" style="width:50px; height:50px;"><br>Credit One Bank Mobile
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/varo-bank-mobile-banking/id1517676784" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2f/dc/b9/2fdcb90a-d28f-63f0-0562-c5704658a70b/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/492x0w.webp" alt="Varo Bank: Mobile Banking" style="width:50px; height:50px;"><br>Varo Bank: Mobile Banking
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Finance" style="display:none;">
-            <a href="https://apps.apple.com/us/app/webull-investing-trading/id1179213067" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/fd/69/43/fd69435c-45b1-fe4f-718c-6af372c2cad1/AppIcon-0-0-1x_U007emarketing-0-10-0-sRGB-85-220.png/492x0w.webp" alt="Webull" style="width:50px; height:50px;"><br>Webull
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Food & Drink" style="display:none;">
-            <a href="https://apps.apple.com/us/app/atmosfy-discover-new-places/id1472693426" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/51/8c/d9/518cd946-f49e-008a-2c75-985058b9351a/AppIcon-1x_U007emarketing-0-5-0-85-220.png/460x0w.webp" alt="Atmosfy: Discover New Places" style="width:50px; height:50px;"><br>Atmosfy: Discover New Places
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Food & Drink" style="display:none;">
-            <a href="https://apps.apple.com/us/app/uber-eats-food-delivery/id1058959277" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/01/8c/86/018c86f4-56cc-0256-5b9a-bb8fb2f2c17a/AppIcon-0-0-1x_U007emarketing-0-7-0-sRGB-85-220.png/492x0w.webp" alt="Uber Eats" style="width:50px; height:50px;"><br>Uber Eats
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Food & Drink" style="display:none;">
-            <a href="https://apps.apple.com/us/app/checkers-rallys-restaurants/id1531948632" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/77/00/26/77002630-f61c-29ba-7d64-9568de1e2bee/AppIcon-1x_U007emarketing-0-10-0-85-220.png/492x0w.webp" alt="Checkers & Rally's Restaurants" style="width:50px; height:50px;"><br>Checkers & Rally's Restaurants
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Health & Fitness" style="display:none;">
-            <a href="https://apps.apple.com/us/app/sweatcoin-walking-step-counter/id971023427" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/e3/67/53/e36753c9-a4e6-306f-1ab1-171637c26a9f/AppIcon-0-0-1x_U007emarketing-0-5-0-85-220.png/492x0w.webp" alt="Sweatcoin・Walking Step Counter" style="width:50px; height:50px;"><br>Sweatcoin・Walking Step Counter
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Health & Fitness" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.lollitech.fasting" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/l1CAQOmpZx31EeLlYMV693aRs1Ygop3rQ31bAqwDKSBK4IXzqYgahy-4IIp7cSTNPQ=w480-h960-rw" alt="Fastin'" style="width:50px; height:50px;"><br>Fastin'
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Lifestyle" style="display:none;">
-            <a href="https://apps.apple.com/us/app/bible/id282935706?mt=8" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/6f/90/cc/6f90ccbb-5e8f-010e-dcfe-77e76fc01adf/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/492x0w.webp" alt="Bible - Daily Study, Audio & Prayer" style="width:50px; height:50px;"><br>Bible - Daily Study, Audio & Prayer
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Lifestyle" style="display:none;">
-            <a href="https://apps.apple.com/us/app/vibe-make-new-friends/id1464078094?mt=8" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/d3/44/19/d34419dd-518e-5596-3cb1-2b5f0b8b5433/AppIcon-1x_U007emarketing-0-5-0-85-220.png/460x0w.webp" alt="Vibe - Make New Friends" style="width:50px; height:50px;"><br>Vibe - Make New Friends
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Lifestyle" style="display:none;">
-            <a href="https://apps.apple.com/us/app/redfin-homes-for-sale-rent/id327962480" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/20/74/e1/2074e1ac-a1d0-db5f-906b-d188efcf76eb/AppIcon-0-0-1x_U007emarketing-0-0-0-6-0-0-85-220.png/492x0w.webp" alt="Redfin" style="width:50px; height:50px;"><br>Redfin
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Lifestyle" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.tinder" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/fDpoqIbZ884ylRnMK8Lx9Fu4DsLQk5yt4f9WkxeOAPpGnzc9BTi_YKkMsLvoMdx7Uzg=w480-h960-rw" alt="Tinder" style="width:50px; height:50px;"><br>Tinder
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Medical" style="display:none;">
-            <a href="https://apps.apple.com/us/app/goodrx-prescription-saver/id485357017" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b3/58/82/b358820f-b982-1557-7c9f-2641d132af78/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/492x0w.webp" alt="GoodRX" style="width:50px; height:50px;"><br>GoodRX
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Photo & Video" style="display:none;">
-            <a href="https://apps.apple.com/us/app/beautyplus-ai-photo-editor/id622434129" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/03/5f/9a/035f9a3a-40ff-c13d-94cc-460776134420/AppIcon-0-0-1x_U007emarketing-0-5-0-0-85-220.png/492x0w.webp" alt="BeautyPlus - AI Photo Editor" style="width:50px; height:50px;"><br>BeautyPlus - AI Photo Editor
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Photo & Video" style="display:none;">
-            <a href="https://apps.apple.com/us/app/airbrush-ai-photo-editor/id998411110" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/e7/4b/49/e74b49b4-5b51-f712-4dcc-cb74c1a0e228/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/492x0w.webp" alt="AirBrush - AI Photo Editor" style="width:50px; height:50px;"><br>AirBrush - AI Photo Editor
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Photo & Video" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.mailpix.onehourphoto.walgreens.android" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/IdkU_asfOE8oJbayw3539onwtuiuUBo_u7fhFIS6kd6TmavfLpKLwOw5X1s0mpyrHg=s96-rw" alt="1 Hour Photo Inc." style="width:50px; height:50px;"><br>1 Hour Photo Inc.
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://apps.apple.com/us/app/circle-k/id1592397814" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/97/e7/95/97e795fc-729d-890e-6e89-41a0698d1bb6/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/492x0w.webp" alt="Circle K" style="width:50px; height:50px;"><br>Circle K
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.rfi.sams.android" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/kgFlgsbsq27nkh3FEL4Q3L8vr0r_NN1LiJmuFywLrFiWe_5dlPwOVew03jKa8mGryTM=s96-rw" alt="Sam's Club" style="width:50px; height:50px;"><br>Sam's Club
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://apps.apple.com/mr/app/rakuten-cash-back-app/id723134859" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/74/bf/12/74bf1296-0795-5ec4-b11c-cf26f2ada976/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/492x0w.webp" alt="Rakuten" style="width:50px; height:50px;"><br>Rakuten
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://apps.apple.com/us/app/alibaba-com-b2b-trade-app/id503451073" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b5/93/22/b59322cc-3ca9-cab8-9e0e-c70753c47562/AppIcon-0-1x_U007epad-0-0-85-220-0.png/492x0w.webp" alt="Alibaba" style="width:50px; height:50px;"><br>Alibaba
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.shopkick.app" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/sMOeh0laoKhx9_OLX5q4viwfaQSQTCRRInWYlchBDU9iBZu5JPj-VamMYHfmdzOH4Dg=s96-rw" alt="Shopkick" style="width:50px; height:50px;"><br>Shopkick
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://apps.apple.com/us/app/poshmark-buy-sell-fashion/id470412147" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/da/fc/0b/dafc0bdc-9592-064f-bfdf-e9d6ed8ff330/AppIcon-0-0-1x_U007epad-0-0-85-220.png/492x0w.webp" alt="Poshmark: Buy & Sell Fashion" style="width:50px; height:50px;"><br>Poshmark: Buy & Sell Fashion
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://apps.apple.com/us/app/ashley-furniture-d%C3%A9cor/id1446058110" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/fe/96/6b/fe966b8e-ff97-8fed-ebdd-0a16176650fa/AppIcon-0-0-1x_U007emarketing-0-7-0-sRGB-85-220.png/492x0w.webp" alt="Ashley Furniture" style="width:50px; height:50px;"><br>Ashley Furniture
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://apps.apple.com/gb/app/shein-shopping-online/id878577184" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/30/a7/9b/30a79b90-0ac8-52f4-c3dd-aca1fe0763f7/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/460x0w.webp" alt="SHEIN - Shopping Online" style="width:50px; height:50px;"><br>SHEIN - Shopping Online
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.walmart.android" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/lmzTAAyXpuxFvWDEALhYAi2Gn5As_4DIMoh5KezxmqeimkxbOFZYO9ttjRJDA1sdL-0=w480-h960-rw" alt="Walmart" style="width:50px; height:50px;"><br>Walmart
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Shopping" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.offerup" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/l_81q9c_BqSJX58fQ-hqWQO9LmMqcuIFW2leB9PtUyu7QY1ngt3gzW0qTos2vBMvpQ=w480-h960-rw" alt="OfferUp" style="width:50px; height:50px;"><br>OfferUp
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Social Networking" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=sg.bigo.live" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/HW8aJVN5rdXLOWYaJiW67XekFeJLQ_UtRctTnosyizlbDcjp195fw6Sq6Z95bw_ramQ=w480-h960-rw" alt="BIGO Live" style="width:50px; height:50px;"><br>BIGO Live
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Social Networking" style="display:none;">
-            <a href="https://apps.apple.com/us/app/discord-chat-talk-hangout/id985746746" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/16/1e/e4/161ee480-8cf5-3c23-f761-ba63e0356606/AppIcon-0-0-1x_U007epad-0-0-0-85-220.png/492x0w.webp" alt="Discord - Chat, Talk & Hangout" style="width:50px; height:50px;"><br>Discord - Chat, Talk & Hangout
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Sports" style="display:none;">
-            <a href="https://apps.apple.com/US/app/id1506229470?mt=8" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/51/81/58/51815838-8b15-a806-3aba-af3ba4055004/AppIcon-0-1x_U007emarketing-0-0-0-10-0-0-85-220-0.png/492x0w.webp" alt="Fanduel Casino" style="width:50px; height:50px;"><br>Fanduel Casino
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Sports" style="display:none;">
-            <a href="https://apps.apple.com/us/app/fanduel-fantasy-sports/id599664106" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/ef/90/ab/ef90abed-01a7-bfa4-797d-868426677150/AppIcon-0-0-1x_U007emarketing-0-7-0-sRGB-85-220.png/492x0w.webp" alt="Fanduel Fantasy Sports" style="width:50px; height:50px;"><br>Fanduel Fantasy Sports
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Sports" style="display:none;">
-            <a href="https://apps.apple.com/us/app/fanduel-faceoff/id1608208805" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e9/3b/02/e93b0264-6d3d-bc2a-2dfd-772934624a1e/AppIcon-1x_U007emarketing-0-5-0-85-220-0.png/492x0w.webp" alt="Fanduel Faceoff" style="width:50px; height:50px;"><br>Fanduel Faceoff
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Sports" style="display:none;">
-            <a href="https://apps.apple.com/US/app/id1413721906?mt=8" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/bc/81/a3/bc81a351-4cfd-6e54-471d-22cadf77cebf/AppIcon-1x_U007emarketing-0-10-0-85-220-0.png/492x0w.webp" alt="Fanduel Sportsbook" style="width:50px; height:50px;"><br>Fanduel Sportsbook
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Sports" style="display:none;">
-            <a href="https://apps.apple.com/us/app/betmgm-sportsbook/id1430875409" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/99/15/7d/99157d11-9531-d24f-4498-15211bc55e28/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/492x0w.webp" alt="BetMGM" style="width:50px; height:50px;"><br>BetMGM
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Sports" style="display:none;">
-            <a href="https://apps.apple.com/us/app/fanduel-racing-bet-on-horses/id1485539253" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e4/81/95/e48195da-1575-361f-0eba-466c8c5a937a/AppIcon-0-0-1x_U007epad-0-10-0-85-220.png/492x0w.webp" alt="Fanduel Horseracing" style="width:50px; height:50px;"><br>Fanduel Horseracing
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Sports" style="display:none;">
-            <a href="https://play.google.com/store/apps/details?id=com.nike.omega&hl=en_US&gl=US" target="_blank">
-                <img src="https://play-lh.googleusercontent.com/eLqKK4MkDoXXbD_F3A_2rs-othxTESxbocvyOGyhAmbNCydgnYKczItIY2-HLYJmhr6Q=w480-h960-rw" alt="Nike" style="width:50px; height:50px;"><br>Nike
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Travel" style="display:none;">
-            <a href="https://apps.apple.com/us/app/chevron/id1450978468" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/e9/c5/bb/e9c5bb70-ece6-e16e-ec4d-8bf64147a616/AppIcon-1x_U007ephone-0-0-85-220-0.png/492x0w.webp" alt="Chevron" style="width:50px; height:50px;"><br>Chevron
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Travel" style="display:none;">
-            <a href="https://apps.apple.com/us/app/upside-cash-back-gas-food/id1099997174" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/86/ae/25/86ae25b1-abc4-96f3-d9dd-6bacaf02db55/AppIcon-0-0-1x_U007ephone-0-0-85-220.png/492x0w.webp" alt="Upside" style="width:50px; height:50px;"><br>Upside
-            </a>
-        </div>
-        
-
-        <div class="app-cell" data-category="Utility" style="display:none;">
-            <a href="https://apps.apple.com/us/app/norton-360-security-vpn/id1278474169" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/d4/38/71/d4387185-c582-2b3a-546b-44de59ee7c07/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/492x0w.webp" alt="Norton 360 Security & VPN" style="width:50px; height:50px;"><br>Norton 360 Security & VPN
-            </a>            
-        </div>
-
-    <script>
+          </div>
+          <div class="offer">
+            <img src="https://github.com/MWBearman/Discover/blob/main/Duolingo.png?raw=true" alt="Duolingo Image" class="main-image" onclick="showModal('myModal2')">
+            <h2>Duolingo</h2>
+            <button class="points-button">1,250 <img src="https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/RewardIcon.png" alt="Coin" class="coin-icon">
+            </button>
+            <button class="learn-more-button" onclick="showModal('myModal2')">Learn More</button>
+          </div>
+          <div class="modal" id="myModal2">
+            <div class="modal-content">
+              <span class="modal-close" onclick="closeModal('myModal2')">&times;</span>
+              <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/0a/8e/3e/0a8e3e55-de9a-97c7-ef92-236921edfbaf/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/230x0w.webp" alt="App Icon" style="width: 100px; height: 100px; margin-bottom: 20px;">
+              <h3>Duolingo</h3>
+              <p>Duolingo is the fun, free app for learning 40+ languages through quick, bite-sized lessons. Practice speaking, reading, listening, and writing to build your vocabulary and grammar skills.</p>
+              <p> 1,250 Fetch Points <img src="https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/RewardIcon.png" alt="Coin" class="coin-icon">
+              </p>
+              <h4>Offer Conditions</h4>
+              <p>Complete unit 1 in your first language to earn Fetch Points</p>
+              <a href="https://apps.apple.com/us/app/disney/id1446075923" target="_blank">
+                <button style="background-color: #390754; color: white; padding: 10px 20px; border-radius: 5px;">Install Now</button>
+              </a>
+            </div>
+          </div>
+          <div class="offer">
+            <img src="https://github.com/MWBearman/Discover/blob/main/Uber.png?raw=true" alt="Uber Image" class="main-image" onclick="showModal('myModal3')">
+            <h2>Uber</h2>
+            <button class="points-button">1,150 <img src="https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/RewardIcon.png" alt="Coin" class="coin-icon">
+            </button>
+            <button class="learn-more-button" onclick="showModal('myModal3')">Learn More</button>
+          </div>
+          <div class="modal" id="myModal3">
+            <div class="modal-content">
+              <span class="modal-close" onclick="closeModal('myModal3')">&times;</span>
+              <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/54/5b/96/545b964d-2272-1e03-456e-ff470e8cff79/AppIcon-0-0-1x_U007emarketing-0-7-0-sRGB-85-220.png/230x0w.webp" alt="App Icon" style="width: 100px; height: 100px; margin-bottom: 20px;">
+              <h3>Uber</h3>
+              <p>Join the millions of riders who trust Uber for their everyday travel needs. Whether you’re running an errand across town or exploring a city far from home, getting there should be easy.</p>
+              <p> 1,150 Fetch Points <img src="https://d21rshqrt3ollt.cloudfront.net/5716549297a814cd190fcd0cc0fc53a3/RewardIcon.png" alt="Coin" class="coin-icon">
+              </p>
+              <h4>Offer Conditions</h4>
+              <p>Hail your first ride with Uber today to start earning Fetch Points</p>
+              <a href="https://apps.apple.com/us/app/disney/id1446075923" target="_blank">
+                <button style="background-color: #390754; color: white; padding: 10px 20px; border-radius: 5px;">Install Now</button>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+      <script>
         function switchSection(sectionId) {
-            var sections = document.querySelectorAll('.content section');
-            sections.forEach(function(section) {
-                section.style.display = 'none';
-            });
-
-            var selectedSection = document.getElementById(sectionId);
-            if (selectedSection) {
-                selectedSection.style.display = 'block';
-            }
+          var sections = document.querySelectorAll('.content section');
+          sections.forEach(function(section) {
+            section.style.display = 'none';
+          });
+          var selectedSection = document.getElementById(sectionId);
+          if (selectedSection) {
+            selectedSection.style.display = 'block';
+          }
         }
 
-function handleCategoryChange() {
-    var select = document.getElementById('categoryDropdown');
-    var allCells = document.querySelectorAll('.app-cell');
-    allCells.forEach(cell => cell.style.display = 'none'); // Hide all first
+        function showModal(modalId) {
+          document.getElementById(modalId).style.display = 'flex';
+        }
 
-    if (select.value === 'all') {
-        allCells.forEach(cell => cell.style.display = 'block'); // Show all cells if 'All Categories' is selected
-    } else {
-        var selectedCells = document.querySelectorAll(`.app-cell[data-category="${select.value}"]`);
-        selectedCells.forEach(cell => cell.style.display = 'block'); // Show only cells of the selected category
-    }
-}
-
-        // On initial page load
+        function closeModal(modalId) {
+          document.getElementById(modalId).style.display = 'none';
+        }
         window.onload = function() {
-            switchSection('apps'); // Initially display the Apps section
-            document.getElementById('categoryDropdown').value = 'Entertainment'; // Set the default dropdown value
-            handleCategoryChange(); // Trigger change to load 'Entertainment'
+          switchSection('games'); // Display the Apps section initially
         };
-    </script>
-</body>
+      </script>
+  </body>
 </html>
